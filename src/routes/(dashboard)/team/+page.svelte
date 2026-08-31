@@ -1,6 +1,8 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import Modal from '$lib/components/ui/Modal.svelte';
   import type { ActionData } from './$types';
 
   let { form }: { form: ActionData } = $props();
@@ -8,10 +10,15 @@
   let teamName = $state('');
   let loading = $state(false);
   let copied = $state(false);
+  let showDeleteModal = $state(false);
+  let deleting = $state(false);
 
   $effect(() => {
     if (form?.success && form?.team) {
       teamName = '';
+    }
+    if (form?.success && form?.deleted) {
+      goto('/dashboard');
     }
   });
 
@@ -23,7 +30,9 @@
 
   const team = $derived($page.data.team);
   const profile = $derived($page.data.profile);
+  const membership = $derived($page.data.membership);
   const members = $derived($page.data.members);
+  const isDirector = $derived(membership?.role === 'director');
 </script>
 
 <svelte:head>
@@ -34,6 +43,12 @@
   <h1 class="text-3xl font-bold mb-6">Team</h1>
 
   {#if team}
+    {#if form?.error}
+      <div class="alert alert-error mb-4">
+        <span>{form.error}</span>
+      </div>
+    {/if}
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="card bg-base-200 shadow">
         <div class="card-body">
@@ -60,6 +75,16 @@
           <p class="text-center text-sm text-base-content/60 mt-2">
             Share this code with your team members so they can join.
           </p>
+
+          {#if isDirector}
+            <div class="divider"></div>
+            <button
+              class="btn btn-error btn-outline btn-sm"
+              onclick={() => { showDeleteModal = true; }}
+            >
+              <i class="fas fa-trash mr-2"></i>Delete Team
+            </button>
+          {/if}
         </div>
       </div>
 
@@ -175,3 +200,36 @@
     </div>
   {/if}
 </div>
+
+<Modal bind:open={showDeleteModal} title="Delete Team" size="sm">
+  <p class="text-base-content/80">
+    Are you sure you want to delete <strong>{team?.name}</strong>?
+  </p>
+  <p class="text-error text-sm mt-2">
+    This action cannot be undone. All members will be removed.
+  </p>
+
+  {#snippet actions()}
+    <button
+      class="btn btn-ghost"
+      onclick={() => { showDeleteModal = false; }}
+    >
+      Cancel
+    </button>
+    <form method="POST" action="?/delete" use:enhance={() => {
+      deleting = true;
+      return async ({ update }) => {
+        deleting = false;
+        showDeleteModal = false;
+        await update();
+      };
+    }}>
+      <button type="submit" class="btn btn-error" disabled={deleting}>
+        {#if deleting}
+          <span class="loading loading-spinner loading-sm"></span>
+        {/if}
+        Delete Team
+      </button>
+    </form>
+  {/snippet}
+</Modal>

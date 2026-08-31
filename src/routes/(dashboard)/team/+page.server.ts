@@ -97,5 +97,30 @@ export const actions: Actions = {
     }
 
     return { success: true, team };
+  },
+
+  delete: async ({ locals }) => {
+    const { user } = await locals.safeGetSession();
+
+    const { data: membership } = await locals.supabase
+      .from('team_members')
+      .select('team_id, role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!membership || membership.role !== 'director') {
+      return fail(403, { error: 'Only directors can delete the team' });
+    }
+
+    const { error } = await locals.supabase
+      .from('teams')
+      .delete()
+      .eq('id', membership.team_id);
+
+    if (error) {
+      return fail(500, { error: 'Failed to delete team' });
+    }
+
+    return { success: true, deleted: true };
   }
 };

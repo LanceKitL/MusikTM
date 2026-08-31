@@ -57,7 +57,7 @@
         <div class="modal-action">
           {@render actions()}
         </div>
-      {:if closable}
+      {:else if closable}
         <form method="dialog">
           <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onclick={handleClose}>
             <i class="fas fa-times"></i>
