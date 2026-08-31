@@ -1,5 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: dark --default;
+}
 
 @theme {
   --color-primary: #3b82f6;
@@ -32,28 +34,18 @@
   }
 }
 
-@layer components {
-  .page-container {
-    @apply mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8;
-  }
+.page-container {
+  @apply mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8;
+}
 
-  .card-elevated {
-    @apply bg-base-200 border border-base-300 rounded-xl shadow-lg;
-  }
+.card-elevated {
+  @apply bg-base-200 border border-base-300 rounded-xl shadow-lg;
+}
 
-  .btn-primary {
-    @apply btn btn-primary font-semibold;
-  }
+.input-field {
+  @apply w-full bg-base-200 border-base-300;
+}
 
-  .btn-secondary {
-    @apply btn btn-secondary font-semibold;
-  }
-
-  .input-field {
-    @apply input input-bordered w-full bg-base-200 border-base-300;
-  }
-
-  .label-text {
-    @apply text-sm font-medium text-base-content;
-  }
+.label-text {
+  @apply text-sm font-medium text-base-content;
 }

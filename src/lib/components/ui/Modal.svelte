@@ -44,7 +44,7 @@
   >
     <div class="modal-backdrop" onclick={closable ? handleClose : undefined}></div>
 
-    <div class="modal-box" class:modal-sm={size === 'sm'} class:modal-lg={size === 'lg'}>
+    <div class="modal-box" class:max-w-sm={size === 'sm'} class:max-w-4xl={size === 'lg'}>
       {#if title}
         <h3 class="font-bold text-lg">{title}</h3>
       {/if}
