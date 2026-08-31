@@ -40,11 +40,11 @@
 </svelte:head>
 
 <div class="page-container">
-  <h1 class="text-3xl font-bold mb-6">Team</h1>
+  <h1 class="text-3xl font-bold mb-6" style="text-wrap: balance;">Team</h1>
 
   {#if team}
     {#if form?.error}
-      <div class="alert alert-error mb-4">
+      <div class="alert alert-error mb-4" role="alert">
         <span>{form.error}</span>
       </div>
     {/if}
@@ -54,20 +54,21 @@
         <div class="card-body">
           <h2 class="card-title text-2xl">{team.name}</h2>
 
-          <div class="divider">Team Code</div>
+          <div class="divider">Team code</div>
 
           <div class="flex items-center justify-center gap-4">
             <span class="text-4xl font-mono font-bold tracking-widest text-primary">
               {team.code}
             </span>
             <button
-              class="btn btn-sm btn-ghost"
+              class="btn btn-sm btn-ghost transition-transform duration-150 ease-out active:scale-[0.96]"
+              aria-label={copied ? 'Copied to clipboard' : 'Copy team code'}
               onclick={() => copyCode(team.code)}
             >
               {#if copied}
-                <i class="fas fa-check text-success"></i>
+                <i class="fas fa-check text-success" aria-hidden="true"></i>
               {:else}
-                <i class="fas fa-copy"></i>
+                <i class="fas fa-copy" aria-hidden="true"></i>
               {/if}
             </button>
           </div>
@@ -79,10 +80,10 @@
           {#if isDirector}
             <div class="divider"></div>
             <button
-              class="btn btn-error btn-outline btn-sm"
+              class="btn btn-error btn-outline btn-sm transition-transform duration-150 ease-out active:scale-[0.96]"
               onclick={() => { showDeleteModal = true; }}
             >
-              <i class="fas fa-trash mr-2"></i>Delete Team
+              <i class="fas fa-trash mr-2" aria-hidden="true"></i>Delete team
             </button>
           {/if}
         </div>
@@ -105,7 +106,7 @@
                     {/if}
                   </div>
                   <div class="flex gap-1">
-                    {#if member.instruments.length > 0}
+                    {#if member.instruments && member.instruments.length > 0}
                       {#each member.instruments as instrument}
                         <span class="badge badge-sm">{instrument}</span>
                       {/each}
@@ -125,12 +126,12 @@
       <div class="card bg-base-200 shadow">
         <div class="card-body">
           <h2 class="card-title">
-            <i class="fas fa-plus-circle mr-2"></i>Create Team
+            <i class="fas fa-plus-circle mr-2" aria-hidden="true"></i>Create team
           </h2>
           <p class="text-base-content/60">Start a new team as director.</p>
 
           {#if form?.error}
-            <div class="alert alert-error">
+            <div class="alert alert-error" role="alert">
               <span>{form.error}</span>
             </div>
           {/if}
@@ -148,7 +149,7 @@
           >
             <div class="form-control mb-4">
               <label class="label" for="teamName">
-                <span class="label-text">Team Name</span>
+                <span class="label-text">Team name</span>
               </label>
               <input
                 type="text"
@@ -156,16 +157,21 @@
                 id="teamName"
                 bind:value={teamName}
                 placeholder="e.g., Worship Team Alpha"
-                class="input input-bordered w-full"
+                class="input input-bordered w-full text-base sm:text-sm"
                 required
               />
             </div>
 
-            <button type="submit" class="btn btn-secondary w-full" disabled={loading}>
+            <button
+              type="submit"
+              class="btn btn-secondary w-full transition-transform duration-150 ease-out active:not-disabled:scale-[0.96]"
+              disabled={loading}
+              aria-busy={loading || undefined}
+            >
               {#if loading}
-                <span class="loading loading-spinner loading-sm"></span>
+                <span class="loading loading-spinner loading-sm" aria-hidden="true"></span>
               {/if}
-              Create Team
+              Create team
             </button>
           </form>
         </div>
@@ -174,34 +180,40 @@
       <div class="card bg-base-200 shadow">
         <div class="card-body">
           <h2 class="card-title">
-            <i class="fas fa-sign-in-alt mr-2"></i>Join Team
+            <i class="fas fa-sign-in-alt mr-2" aria-hidden="true"></i>Join team
           </h2>
           <p class="text-base-content/60">Join an existing team with a code.</p>
 
-          <div class="form-control mb-4">
-            <label class="label" for="joinCode">
-              <span class="label-text">Team Code</span>
-            </label>
-            <input
-              type="text"
-              name="joinCode"
-              id="joinCode"
-              placeholder="Enter 6-character code"
-              class="input input-bordered w-full uppercase"
-              maxlength="6"
-            />
-          </div>
+          <form method="POST" action="?/join">
+            <div class="form-control mb-4">
+              <label class="label" for="joinCode">
+                <span class="label-text">Team code</span>
+              </label>
+              <input
+                type="text"
+                name="joinCode"
+                id="joinCode"
+                placeholder="Enter 6-character code"
+                class="input input-bordered w-full uppercase text-base sm:text-sm"
+                maxlength="6"
+              />
+            </div>
 
-          <button class="btn btn-primary w-full" disabled>
-            Join Team
-          </button>
+            <button
+              type="submit"
+              class="btn btn-primary w-full transition-transform duration-150 ease-out active:scale-[0.96]"
+              disabled
+            >
+              Join team
+            </button>
+          </form>
         </div>
       </div>
     </div>
   {/if}
 </div>
 
-<Modal bind:open={showDeleteModal} title="Delete Team" size="sm">
+<Modal bind:open={showDeleteModal} title="Delete team" size="sm">
   <p class="text-base-content/80">
     Are you sure you want to delete <strong>{team?.name}</strong>?
   </p>
@@ -211,7 +223,7 @@
 
   {#snippet actions()}
     <button
-      class="btn btn-ghost"
+      class="btn btn-ghost transition-transform duration-150 ease-out active:scale-[0.96]"
       onclick={() => { showDeleteModal = false; }}
     >
       Cancel
@@ -224,11 +236,16 @@
         await update();
       };
     }}>
-      <button type="submit" class="btn btn-error" disabled={deleting}>
+      <button
+        type="submit"
+        class="btn btn-error transition-transform duration-150 ease-out active:not-disabled:scale-[0.96]"
+        disabled={deleting}
+        aria-busy={deleting || undefined}
+      >
         {#if deleting}
-          <span class="loading loading-spinner loading-sm"></span>
+          <span class="loading loading-spinner loading-sm" aria-hidden="true"></span>
         {/if}
-        Delete Team
+        Delete team
       </button>
     </form>
   {/snippet}

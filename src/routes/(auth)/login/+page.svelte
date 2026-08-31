@@ -10,16 +10,16 @@
 </script>
 
 <svelte:head>
-  <title>Login - MusikkTM</title>
+  <title>Log in - MusikkTM</title>
 </svelte:head>
 
 <div class="min-h-dvh flex items-center justify-center bg-base-200 px-4">
   <div class="card w-full max-w-md bg-base-100 shadow-xl">
     <div class="card-body">
-      <h2 class="card-title text-2xl font-bold mb-4">Login</h2>
+      <h2 class="card-title text-2xl font-bold mb-4">Log in</h2>
 
       {#if form?.error}
-        <div class="alert alert-error mb-4">
+        <div class="alert alert-error mb-4" role="alert">
           <span>{form.error}</span>
         </div>
       {/if}
@@ -41,7 +41,8 @@
             id="email"
             bind:value={email}
             placeholder="you@example.com"
-            class="input input-bordered w-full"
+            class="input input-bordered w-full text-base sm:text-sm"
+            autocomplete="email"
             required
           />
         </div>
@@ -55,21 +56,27 @@
             name="password"
             id="password"
             bind:value={password}
-            placeholder="••••••••"
-            class="input input-bordered w-full"
+            placeholder="Enter your password"
+            class="input input-bordered w-full text-base sm:text-sm"
+            autocomplete="current-password"
             required
           />
         </div>
 
-        <button type="submit" class="btn btn-primary w-full" disabled={loading}>
+        <button
+          type="submit"
+          class="btn btn-primary w-full transition-transform duration-150 ease-out active:not-disabled:scale-[0.96]"
+          disabled={loading}
+          aria-busy={loading || undefined}
+        >
           {#if loading}
-            <span class="loading loading-spinner loading-sm"></span>
+            <span class="loading loading-spinner loading-sm" aria-hidden="true"></span>
           {/if}
-          Login
+          Log in
         </button>
       </form>
 
-      <div class="divider">OR</div>
+      <div class="divider">or</div>
 
       <p class="text-center text-sm">
         Don't have an account?

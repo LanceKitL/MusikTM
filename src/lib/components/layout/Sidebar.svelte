@@ -1,6 +1,5 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
 
   interface NavLink {
     href: string;
@@ -16,18 +15,22 @@
   let { links, collapsed = false }: Props = $props();
 
   $effect(() => {
-    // Track current path for active state
     $page.url.pathname;
   });
 </script>
 
-<aside class="bg-base-200 min-h-screen transition-all" class:w-64={!collapsed} class:w-16={collapsed}>
-  <nav class="flex flex-col h-full">
+<aside
+  class="bg-base-200 min-h-screen transition-[width] duration-200 ease-out"
+  class:w-64={!collapsed}
+  class:w-16={collapsed}
+  aria-label="Main navigation"
+>
+  <nav aria-label="Sidebar navigation">
     <div class="p-4">
       {#if !collapsed}
         <span class="text-xl font-bold">MusikkTM</span>
       {:else}
-        <span class="text-xl font-bold">M</span>
+        <span class="text-xl font-bold" title="MusikkTM">M</span>
       {/if}
     </div>
 
@@ -38,8 +41,9 @@
             href={link.href}
             class="flex items-center gap-3"
             class:active={$page.url.pathname.startsWith(link.href)}
+            aria-current={$page.url.pathname.startsWith(link.href) ? 'page' : undefined}
           >
-            <i class="{link.icon}"></i>
+            <i class="{link.icon}" aria-hidden="true"></i>
             {#if !collapsed}
               <span>{link.label}</span>
             {/if}

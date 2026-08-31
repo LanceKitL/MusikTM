@@ -21,9 +21,13 @@
     actions
   }: Props = $props();
 
+  let dialogEl = $state<HTMLDialogElement | null>(null);
+  let previousFocus = $state<HTMLElement | null>(null);
+
   function handleClose() {
     open = false;
     onclose?.();
+    previousFocus?.focus();
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -31,39 +35,67 @@
       handleClose();
     }
   }
+
+  function handleBackdropClick(e: MouseEvent) {
+    if (e.target === e.currentTarget && closable) {
+      handleClose();
+    }
+  }
+
+  $effect(() => {
+    if (open) {
+      previousFocus = document.activeElement as HTMLElement;
+      dialogEl?.showModal();
+      document.body.style.overflow = 'hidden';
+    } else {
+      dialogEl?.close();
+      document.body.style.overflow = '';
+    }
+  });
+
+  $effect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  });
 </script>
 
-{#if open}
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div
-    class="modal modal-open"
-    onkeydown={handleKeydown}
-    role="dialog"
-    aria-modal="true"
-    aria-label={title}
-  >
-    <div class="modal-backdrop" onclick={closable ? handleClose : undefined}></div>
+<dialog
+  bind:this={dialogEl}
+  class="modal"
+  onkeydown={handleKeydown}
+  aria-label={title || undefined}
+  style="overscroll-behavior: contain;"
+>
+  <div class="modal-backdrop" aria-hidden="true" onclick={closable ? handleClose : undefined}></div>
 
-    <div class="modal-box" class:max-w-sm={size === 'sm'} class:max-w-4xl={size === 'lg'}>
-      {#if title}
-        <h3 class="font-bold text-lg">{title}</h3>
-      {/if}
+  <div class="modal-box" class:max-w-sm={size === 'sm'} class:max-w-4xl={size === 'lg'}>
+    {#if title}
+      <h3 class="font-bold text-lg">{title}</h3>
+    {/if}
 
-      <div class="py-4">
-        {@render children()}
-      </div>
-
-      {#if actions}
-        <div class="modal-action">
-          {@render actions()}
-        </div>
-      {:else if closable}
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onclick={handleClose}>
-            <i class="fas fa-times"></i>
-          </button>
-        </form>
-      {/if}
+    <div class="py-4">
+      {@render children()}
     </div>
+
+    {#if actions}
+      <div class="modal-action">
+        {@render actions()}
+      </div>
+    {/if}
+
+    {#if closable}
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Close" onclick={handleClose}>
+          <i class="fas fa-times"></i>
+        </button>
+      </form>
+    {/if}
   </div>
-{/if}
+</dialog>
+
+<style>
+  dialog::backdrop {
+    background-color: oklch(0 0 0 / 0.6);
+  }
+</style>

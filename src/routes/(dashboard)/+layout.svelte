@@ -23,7 +23,7 @@
       collapsed={!$uiStore.sidebarOpen}
     />
 
-    <main class="flex-1 p-4 lg:p-6">
+    <main id="main-content" class="flex-1 p-4 lg:p-6">
       {@render children()}
     </main>
   </div>

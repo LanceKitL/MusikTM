@@ -8,8 +8,8 @@
 <div class="page-container">
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-3xl font-bold">Cifra</h1>
-    <button class="btn btn-primary">
-      <i class="fas fa-plus mr-2"></i>Add Song
+    <button class="btn btn-primary transition-transform duration-150 ease-out active:scale-[0.96]" disabled>
+      <i class="fas fa-plus mr-2" aria-hidden="true"></i>Add song
     </button>
   </div>
 

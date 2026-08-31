@@ -3,6 +3,7 @@
 
   interface Props {
     title?: string;
+    headingLevel?: 2 | 3 | 4;
     bordered?: boolean;
     compact?: boolean;
     class?: string;
@@ -11,6 +12,7 @@
 
   let {
     title = '',
+    headingLevel = 3,
     bordered = true,
     compact = false,
     class: className = '',
@@ -20,7 +22,13 @@
 
 <div class="card {className}" class:bordered={bordered} class:compact>
   {#if title}
-    <div class="card-title">{title}</div>
+    {#if headingLevel === 2}
+      <h2 class="card-title">{title}</h2>
+    {:else if headingLevel === 3}
+      <h3 class="card-title">{title}</h3>
+    {:else}
+      <h4 class="card-title">{title}</h4>
+    {/if}
   {/if}
   <div class="card-body">
     {@render children()}
