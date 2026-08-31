@@ -72,3 +72,12 @@
 .label-text {
   @apply text-sm font-medium text-base-content;
 }
+
+/* Subtle glow effect behind key elements */
+.glow-primary {
+  box-shadow: 0 0 0 1px oklch(var(--p) / 0.1), 0 4px 24px -4px oklch(var(--p) / 0.15);
+}
+
+.glow-primary:hover {
+  box-shadow: 0 0 0 1px oklch(var(--p) / 0.2), 0 8px 32px -4px oklch(var(--p) / 0.2);
+}
