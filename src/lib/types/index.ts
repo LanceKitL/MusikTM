@@ -1,5 +1,3 @@
-export type UserRole = 'director' | 'member';
-
 export type InstrumentRole =
   | 'song_lead'
   | 'backup_vocals'
@@ -11,12 +9,13 @@ export type InstrumentRole =
   | 'sound_operator'
   | 'other';
 
+export type TeamMemberRole = 'director' | 'member';
+
 export type AvailabilityStatus = 'available' | 'unavailable' | 'pending';
 
 export interface Profile {
   id: string;
   full_name: string;
-  role: UserRole;
   avatar_url: string | null;
   created_at: string;
 }
@@ -32,7 +31,8 @@ export interface Team {
 export interface TeamMember {
   team_id: string;
   user_id: string;
-  instrument_role: InstrumentRole;
+  role: TeamMemberRole;
+  instruments: string[];
   joined_at: string;
   profile?: Profile;
 }

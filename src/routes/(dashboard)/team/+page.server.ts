@@ -7,12 +7,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   const { data: membership } = await locals.supabase
     .from('team_members')
-    .select('team_id, instrument_role')
+    .select('team_id, role, instruments')
     .eq('user_id', user.id)
     .single();
 
   let team = null;
-  let members: Array<{ user_id: string; instrument_role: string; full_name: string }> = [];
+  let members: Array<{ user_id: string; role: string; instruments: string[]; full_name: string }> = [];
 
   if (membership) {
     const { data: teamData } = await locals.supabase
@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     if (team) {
       const { data: memberRows } = await locals.supabase
         .from('team_members')
-        .select('user_id, instrument_role')
+        .select('user_id, role, instruments')
         .eq('team_id', team.id);
 
       if (memberRows && memberRows.length > 0) {
@@ -41,7 +41,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 
         members = memberRows.map((m) => ({
           user_id: m.user_id,
-          instrument_role: m.instrument_role,
+          role: m.role,
+          instruments: m.instruments ?? [],
           full_name: profileMap.get(m.user_id) ?? 'Unknown'
         }));
       }
@@ -87,17 +88,13 @@ export const actions: Actions = {
       .insert({
         team_id: team.id,
         user_id: user.id,
-        instrument_role: 'song_lead'
+        role: 'director',
+        instruments: []
       });
 
     if (memberError) {
       return fail(500, { error: 'Failed to add you as team member' });
     }
-
-    await locals.supabase
-      .from('profiles')
-      .update({ role: 'director' })
-      .eq('id', user.id);
 
     return { success: true, team };
   }

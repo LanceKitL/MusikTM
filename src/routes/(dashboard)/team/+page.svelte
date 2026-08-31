@@ -73,8 +73,21 @@
             <ul class="space-y-2">
               {#each members as member}
                 <li class="flex items-center justify-between p-2 rounded bg-base-300">
-                  <span>{member.full_name}</span>
-                  <span class="badge badge-sm">{member.instrument_role}</span>
+                  <div class="flex items-center gap-2">
+                    <span>{member.full_name}</span>
+                    {#if member.role === 'director'}
+                      <span class="badge badge-primary badge-sm">Director</span>
+                    {/if}
+                  </div>
+                  <div class="flex gap-1">
+                    {#if member.instruments.length > 0}
+                      {#each member.instruments as instrument}
+                        <span class="badge badge-sm">{instrument}</span>
+                      {/each}
+                    {:else}
+                      <span class="text-xs text-base-content/40">No instruments</span>
+                    {/if}
+                  </div>
                 </li>
               {/each}
             </ul>
