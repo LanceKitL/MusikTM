@@ -56,10 +56,10 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-  create: async ({ locals }) => {
+  create: async ({ request, locals }) => {
     const { user } = await locals.safeGetSession();
 
-    const formData = await locals.request.formData();
+    const formData = await request.formData();
     const teamName = formData.get('teamName') as string;
 
     if (!teamName || teamName.trim().length < 2) {
