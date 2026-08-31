@@ -9,10 +9,9 @@
 
   interface Props {
     links: NavLink[];
-    collapsed?: boolean;
   }
 
-  let { links, collapsed = false }: Props = $props();
+  let { links }: Props = $props();
 
   $effect(() => {
     $page.url.pathname;
@@ -20,18 +19,12 @@
 </script>
 
 <aside
-  class="bg-base-200 min-h-screen transition-[width] duration-200 ease-out"
-  class:w-64={!collapsed}
-  class:w-16={collapsed}
+  class="bg-base-200 w-64 min-h-screen border-r border-base-300"
   aria-label="Main navigation"
 >
   <nav aria-label="Sidebar navigation">
     <div class="p-4">
-      {#if !collapsed}
-        <span class="text-xl font-bold">MusikkTM</span>
-      {:else}
-        <span class="text-xl font-bold" title="MusikkTM">M</span>
-      {/if}
+      <span class="text-xl font-bold">MusikkTM</span>
     </div>
 
     <ul class="menu flex-1">
@@ -44,9 +37,7 @@
             aria-current={$page.url.pathname.startsWith(link.href) ? 'page' : undefined}
           >
             <i class="{link.icon}" aria-hidden="true"></i>
-            {#if !collapsed}
-              <span>{link.label}</span>
-            {/if}
+            <span>{link.label}</span>
           </a>
         </li>
       {/each}

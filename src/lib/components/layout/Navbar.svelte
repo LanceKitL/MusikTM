@@ -1,12 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
 
-  interface Props {
-    onMenuClick?: () => void;
-  }
-
-  let { onMenuClick }: Props = $props();
-
   let dropdownOpen = $state(false);
 
   function handleDropdownKeydown(e: KeyboardEvent) {
@@ -14,17 +8,16 @@
       dropdownOpen = false;
     }
   }
+
+  function closeDropdown() {
+    dropdownOpen = false;
+  }
 </script>
+
+<svelte:window on:click={() => { if (dropdownOpen) closeDropdown(); }} />
 
 <header class="navbar bg-base-200 sticky top-0 z-50 border-b border-base-300">
   <div class="navbar-start">
-    <button
-      class="btn btn-ghost btn-sm lg:hidden"
-      onclick={onMenuClick}
-      aria-label="Toggle navigation menu"
-    >
-      <i class="fas fa-bars" aria-hidden="true"></i>
-    </button>
     <a href="/" class="btn btn-ghost text-xl font-bold">MusikkTM</a>
   </div>
 
@@ -37,7 +30,7 @@
           aria-haspopup="true"
           aria-expanded={dropdownOpen}
           class="btn btn-ghost btn-circle avatar"
-          onclick={() => { dropdownOpen = !dropdownOpen; }}
+          onclick={(e) => { e.stopPropagation(); dropdownOpen = !dropdownOpen; }}
           onkeydown={handleDropdownKeydown}
         >
           <div class="w-10 rounded-full">
@@ -60,9 +53,9 @@
           <li class="menu-title" role="presentation">
             <span>{$page.data.profile?.full_name || 'User'}</span>
           </li>
-          <li role="none"><a href="/dashboard" role="menuitem"><i class="fas fa-home mr-2" aria-hidden="true"></i>Dashboard</a></li>
-          <li role="none"><a href="/team" role="menuitem"><i class="fas fa-users mr-2" aria-hidden="true"></i>Team</a></li>
-          <li role="none"><a href="/settings" role="menuitem"><i class="fas fa-cog mr-2" aria-hidden="true"></i>Settings</a></li>
+          <li role="none"><a href="/dashboard" role="menuitem" onclick={closeDropdown}><i class="fas fa-home mr-2" aria-hidden="true"></i>Dashboard</a></li>
+          <li role="none"><a href="/team" role="menuitem" onclick={closeDropdown}><i class="fas fa-users mr-2" aria-hidden="true"></i>Team</a></li>
+          <li role="none"><a href="/settings" role="menuitem" onclick={closeDropdown}><i class="fas fa-cog mr-2" aria-hidden="true"></i>Settings</a></li>
           <li role="none">
             <form method="POST" action="/auth/signout">
               <button type="submit" role="menuitem">
