@@ -11,7 +11,7 @@
 
 <header class="navbar bg-base-200 sticky top-0 z-50 border-b border-base-300">
   <div class="navbar-start">
-    <button class="btn btn-ghost btn-sm lg:hidden" onclick={onMenuClick}>
+    <button class="btn btn-ghost btn-sm lg:hidden" onclick={onMenuClick} aria-label="Toggle menu">
       <i class="fas fa-bars"></i>
     </button>
     <a href="/" class="btn btn-ghost text-xl font-bold">MusikkTM</a>
@@ -29,7 +29,7 @@
             {/if}
           </div>
         </button>
-        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
+        <ul class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52">
           <li class="menu-title">
             <span>{$page.data.profile?.full_name || 'User'}</span>
           </li>

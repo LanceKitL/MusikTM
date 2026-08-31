@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+import { PUBLIC_APP_URL } from '$env/static/public';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -23,6 +24,7 @@ export const actions: Actions = {
       email,
       password,
       options: {
+        emailRedirectTo: `${PUBLIC_APP_URL}/auth/callback`,
         data: {
           full_name: fullName
         }
