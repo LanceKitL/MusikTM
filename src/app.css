@@ -1,0 +1,59 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --color-primary: #3b82f6;
+  --color-primary-content: #ffffff;
+  --color-secondary: #8b5cf6;
+  --color-secondary-content: #ffffff;
+  --color-accent: #06b6d4;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1e293b;
+  --color-neutral-content: #f1f5f9;
+  --color-base-100: #0f172a;
+  --color-base-200: #1e293b;
+  --color-base-300: #334155;
+  --color-base-content: #f8fafc;
+  --color-info: #3b82f6;
+  --color-success: #22c55e;
+  --color-warning: #eab308;
+  --color-error: #ef4444;
+  --font-family-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-base-100 text-base-content min-h-dvh;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8;
+  }
+
+  .card-elevated {
+    @apply bg-base-200 border border-base-300 rounded-xl shadow-lg;
+  }
+
+  .btn-primary {
+    @apply btn btn-primary font-semibold;
+  }
+
+  .btn-secondary {
+    @apply btn btn-secondary font-semibold;
+  }
+
+  .input-field {
+    @apply input input-bordered w-full bg-base-200 border-base-300;
+  }
+
+  .label-text {
+    @apply text-sm font-medium text-base-content;
+  }
+}
