@@ -12,29 +12,20 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
   default: async ({ request, locals }) => {
     const formData = await request.formData();
-    const fullName = formData.get('fullName') as string;
     const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
 
-    if (!fullName || !email || !password) {
-      return { error: 'All fields are required' };
+    if (!email) {
+      return { error: 'Email is required' };
     }
 
-    const { data, error } = await locals.supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${PUBLIC_APP_URL}/auth/callback`,
-        data: {
-          full_name: fullName
-        }
-      }
+    const { error } = await locals.supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${PUBLIC_APP_URL}/auth/callback?type=recovery`
     });
 
     if (error) {
       return { error: error.message };
     }
 
-    throw redirect(303, `/verify-email?email=${encodeURIComponent(email)}`);
+    return { success: true };
   }
 };

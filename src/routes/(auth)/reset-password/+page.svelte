@@ -1,31 +1,24 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import { page } from '$app/stores';
-  import type { ActionData, PageData } from './$types';
+  import type { ActionData } from './$types';
 
-  let { form, data }: { form: ActionData; data: PageData } = $props();
+  let { form }: { form: ActionData } = $props();
 
-  let email = $state('');
   let password = $state('');
   let loading = $state(false);
-
-  let showResetSuccess = $derived($page.url.searchParams.get('reset') === 'success');
 </script>
 
 <svelte:head>
-  <title>Log in - MusikkTM</title>
+  <title>Reset password - MusikkTM</title>
 </svelte:head>
 
 <div class="min-h-dvh flex items-center justify-center bg-base-200 px-4">
   <div class="card w-full max-w-md bg-base-100 shadow-xl">
     <div class="card-body">
-      <h2 class="card-title text-2xl font-bold mb-4">Log in</h2>
-
-      {#if showResetSuccess}
-        <div class="alert alert-success mb-4" role="status">
-          <span>Password has been reset. Please log in with your new password.</span>
-        </div>
-      {/if}
+      <h2 class="card-title text-2xl font-bold mb-2">Set new password</h2>
+      <p class="text-sm text-base-content/70 mb-4">
+        Enter your new password below.
+      </p>
 
       {#if form?.error}
         <div class="alert alert-error mb-4" role="alert">
@@ -40,42 +33,26 @@
           await update();
         };
       }}>
-        <input type="hidden" name="redirectTo" value={data.redirectTo} />
-        <div class="form-control mb-4">
-          <label class="label" for="email">
-            <span class="label-text">Email</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            bind:value={email}
-            placeholder="you@example.com"
-            class="input input-bordered w-full text-base sm:text-sm"
-            autocomplete="email"
-            required
-          />
-        </div>
-
         <div class="form-control mb-2">
           <label class="label" for="password">
-            <span class="label-text">Password</span>
+            <span class="label-text">New password</span>
           </label>
           <input
             type="password"
             name="password"
             id="password"
             bind:value={password}
-            placeholder="Enter your password"
+            placeholder="At least 8 characters"
             class="input input-bordered w-full text-base sm:text-sm"
-            autocomplete="current-password"
+            autocomplete="new-password"
+            minlength="8"
             required
           />
         </div>
 
-        <div class="text-right mb-6">
-          <a href="/forgot-password" class="link link-primary text-sm">Forgot password?</a>
-        </div>
+        <p class="text-xs text-base-content/60 mb-6" id="password-hint">
+          Must be at least 8 characters
+        </p>
 
         <button
           type="submit"
@@ -86,15 +63,14 @@
           {#if loading}
             <span class="loading loading-spinner loading-sm" aria-hidden="true"></span>
           {/if}
-          Log in
+          Reset password
         </button>
       </form>
 
       <div class="divider">or</div>
 
       <p class="text-center text-sm">
-        Don't have an account?
-        <a href="/signup" class="link link-primary">Sign up</a>
+        <a href="/login" class="link link-primary">Back to log in</a>
       </p>
     </div>
   </div>

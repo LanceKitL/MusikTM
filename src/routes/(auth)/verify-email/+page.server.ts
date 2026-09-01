@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+import { PUBLIC_APP_URL } from '$env/static/public';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
@@ -7,30 +8,31 @@ export const load: PageServerLoad = async ({ locals, url }) => {
     throw redirect(303, '/dashboard');
   }
 
-  const redirectTo = url.searchParams.get('redirectTo') ?? '/dashboard';
-  return { redirectTo };
+  const email = url.searchParams.get('email') ?? '';
+  return { email };
 };
 
 export const actions: Actions = {
-  default: async ({ request, locals, url }) => {
+  default: async ({ request, locals }) => {
     const formData = await request.formData();
     const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const redirectTo = (formData.get('redirectTo') as string) || '/dashboard';
 
-    if (!email || !password) {
-      return { error: 'Email and password are required' };
+    if (!email) {
+      return { error: 'Email is required' };
     }
 
-    const { error } = await locals.supabase.auth.signInWithPassword({
+    const { error } = await locals.supabase.auth.resend({
+      type: 'signup',
       email,
-      password
+      options: {
+        emailRedirectTo: `${PUBLIC_APP_URL}/auth/callback`
+      }
     });
 
     if (error) {
       return { error: error.message };
     }
 
-    throw redirect(303, redirectTo);
+    return { success: true };
   }
 };
